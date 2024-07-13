@@ -6,14 +6,14 @@
     <title>Find Sum</title>
 </head>
 <body>
-    <input id="firstValue" placeholder="Enetr first number" type="number"></input>
-    <input id="secondValue" placeholder="Enetr second number" type="number"></input>
-    <button onclick="calculateSum()" id="Calculate">Calculate</button>
+    <input oninput="debounceSum()" id="firstValue" placeholder="Enetr first number" type="number"></input>
+    <input oninput="debounceSum()" id="secondValue" placeholder="Enetr second number" type="number"></input>
+    <!-- <button onclick="calculateSum()" id="Calculate">Calculate</button> -->
     <div id="total sum"></div>
 
 
     <script>
-        function calculateSum(){
+       /* function calculateSum(){
             const a=document.getElementById("firstValue").value;
             const b=document.getElementById("secondValue").value;
             if (!a || !b) {
@@ -32,6 +32,36 @@
                 console.log(error);
             })
         }
+    */
+        // debouncing- used to reduce network request for specific amount of time.
+        // Throuttling- when a backend do the same thing it is known as throutteling.
+        let timeout;
+        function debounceSum(){
+            clearTimeout(timeout);
+            timeout=setTimeout(function(){
+                calculateSum2();
+            },1000)
+        }
+        function calculateSum2(){
+            const a=document.getElementById("firstValue").value;
+            const b=document.getElementById("secondValue").value;
+            if (!a || !b) {
+                // alert("Please enter both numbers.");
+                return;
+            }
+
+            fetch(`http://localhost:3000/?a=${a}&b=${b}`)
+            .then((res)=>{
+                return res.text();  // it specify in which formate you want the response
+            })
+            .then((data)=>{
+                document.getElementById("total sum").innerText=`total sum: ${data}`;
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        }
+        
     </script>
 </body>
 </html>
